@@ -1,56 +1,67 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Input, ListItem, Text, CheckBox } from 'react-native-elements';
+import create from 'zustand';
+
+const useTodoStore = create((set) => ({
+  tasks: [],
+  addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
+  deleteTask: (index) =>
+    set((state) => ({ tasks: state.tasks.filter((_, i) => i !== index) })),
+  toggleTask: (index) =>
+    set((state) => {
+      const tasks = [...state.tasks];
+      tasks[index].completed = !tasks[index].completed;
+      return { tasks };
+    }),
+}));
 
 export default function TodoListScreen({ route }) {
   const { category } = route.params;
-  const [task, setTask] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
-
-  const addTask = () => {
-    setTasks([...tasks, task]);
-    setTask('');
-  };
-
-  const deleteTask = (index) => {
-    const newTasks = [...tasks];
-    newTasks.splice(index, 1);
-    setTasks(newTasks);
-  };
+  const { tasks, addTask, deleteTask, toggleTask } = useTodoStore();
 
   const renderTask = (task, index) => {
-    const isTaskCompleted = completedTasks.includes(index);
     return (
       <ListItem key={index} bottomDivider>
         <CheckBox
-          checked={isTaskCompleted}
-          onPress={() => {
-            if (isTaskCompleted) {
-              setCompletedTasks(completedTasks.filter(i => i !== index));
-            } else {
-              setCompletedTasks([...completedTasks, index]);
-            }
-          }}
+          checked={task.completed}
+          onPress={() => toggleTask(index)}
         />
         <ListItem.Content>
-          <ListItem.Title style={isTaskCompleted ? styles.completedTask : null}>{task}</ListItem.Title>
+          <ListItem.Title
+            style={task.completed ? styles.completedTask : null}
+          >
+            {task.title}
+          </ListItem.Title>
         </ListItem.Content>
         <Button title="Excluir" onPress={() => deleteTask(index)} />
       </ListItem>
     );
   };
 
+  const addTaskAndSave = () => {
+    addTask({ title: task, completed: false });
+    setTask('');
+  };
+
+  const [task, setTask] = React.useState('');
+
   return (
     <View style={styles.container}>
-      <Text h2 style={styles.title}>{category}</Text>
+      <Text h2 style={styles.title}>
+        {category}
+      </Text>
       <Input
         placeholder="Adicionar item"
         value={task}
         onChangeText={(value) => setTask(value)}
         containerStyle={styles.inputContainer}
       />
-      <Button title="Adicionar" onPress={addTask} containerStyle={styles.button} />
+      <Button
+        title="Adicionar"
+        onPress={addTaskAndSave}
+        containerStyle={styles.button}
+      />
       <View style={styles.listContainer}>
         {tasks.map((task, index) => renderTask(task, index))}
       </View>

@@ -33,4 +33,4 @@ const styles = StyleSheet.create({
     width: '80%',
     marginBottom: 20,
   },
-});
+}); 
