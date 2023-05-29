@@ -5,7 +5,7 @@ import axios from 'axios';
 import CustomInputDialogModal from './CustomInputDialogModal';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.0.5:3000',
+  baseURL: 'http://192.168.0.5:3000', // alterar
 });
 
 const CategoryScreen = ({ navigation }) => {
@@ -51,6 +51,18 @@ const CategoryScreen = ({ navigation }) => {
     }
   };
 
+  const handleRemoverLista = async (id) => {
+    try {
+      setLoading(true);
+      await instance.delete(`list/${id}`);
+      setListas(listas.filter((lista) => lista.id !== id));
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Suas Listas</Text>
@@ -60,12 +72,17 @@ const CategoryScreen = ({ navigation }) => {
         <>
           {listas.length > 0 ? (
             listas.map((lista) => (
-              <Button
-                key={lista.id}
-                title={lista.name}
-                onPress={() => navigation.navigate('Lista', { category: lista.name })}
-                containerStyle={styles.buttonContainer}
-              />
+              <View style={styles.listItem} key={lista.id}>
+                <Button
+                  title={lista.name}
+                  onPress={() => navigation.navigate('Lista', { category: lista.name })}
+                  containerStyle={styles.buttonContainer}
+                />
+                <Button
+                  title='x'
+                  onPress={() => handleRemoverLista(lista.id)}
+                />
+              </View>
             ))
           ) : (
             <View>
@@ -80,7 +97,7 @@ const CategoryScreen = ({ navigation }) => {
           />
         </>
       )}
-      <CustomInputDialogModal style={styles.teste}
+      <CustomInputDialogModal
         visible={dialogVisible}
         onClose={handleDialogClose}
         onSubmit={handleDialogSubmit}
@@ -97,18 +114,20 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 30,
-    fontSize: 40
+    fontSize: 40,
   },
   buttonContainer: {
-    width: '80%',
-    marginBottom: 20,
+    flex: 1,
+    marginRight: 10,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   noListText: {
     marginBottom: 20,
   },
-  teste: {
-    alignItems: 'center'
-  }
 });
 
 export default CategoryScreen;
