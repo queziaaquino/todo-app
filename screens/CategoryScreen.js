@@ -5,7 +5,7 @@ import axios from 'axios';
 import CustomInputDialogModal from './CustomInputDialogModal';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.0.5:3000', // alterar
+  baseURL: 'https://todo-app-wx01.onrender.com', // alterar
 });
 
 const CategoryScreen = ({ navigation }) => {
