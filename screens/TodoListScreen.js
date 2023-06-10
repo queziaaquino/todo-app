@@ -1,24 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Input, ListItem, Text, CheckBox } from 'react-native-elements';
-import create from 'zustand';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+import { fetchListIdByName, fetchItemsByListId, deleteItemById } from '../actions/listActions';
 
-const useTodoStore = create((set) => ({
-  tasks: [],
-  addTask: (task) => set((state) => ({ tasks: [...state.tasks, task] })),
-  deleteTask: (index) =>
-    set((state) => ({ tasks: state.tasks.filter((_, i) => i !== index) })),
-  toggleTask: (index) =>
-    set((state) => {
-      const tasks = [...state.tasks];
-      tasks[index].completed = !tasks[index].completed;
-      return { tasks };
-    }),
-}));
+const instance = axios.create({
+  baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
+});
 
 export default function TodoListScreen({ route }) {
   const { category } = route.params;
-  const { tasks, addTask, deleteTask, toggleTask } = useTodoStore();
+  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState('');
 
   const renderTask = (task, index) => {
     return (
@@ -31,20 +25,65 @@ export default function TodoListScreen({ route }) {
           <ListItem.Title
             style={task.completed ? styles.completedTask : null}
           >
-            {task.title}
+            {task.name}
           </ListItem.Title>
         </ListItem.Content>
-        <Button title="Excluir" onPress={() => deleteTask(index)} />
+        <Button title="Excluir" onPress={() => deleteTask(index, task.id)} />
       </ListItem>
     );
   };
 
-  const addTaskAndSave = () => {
-    addTask({ title: task, completed: false });
-    setTask('');
+  const addTaskAndSave = async () => {
+    try {
+      const listId = await fetchListIdByName(category);
+      if (!listId) {
+        console.error('Lista não encontrada');
+        return;
+      }
+
+      const newItem = {
+        id: uuidv4(),
+        name: task,
+      };
+
+      await instance.post(`list/${listId}/item`, newItem);
+      setTasks([...tasks, newItem]);
+      setTask('');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const [task, setTask] = React.useState('');
+  const deleteTask = async (index, itemId) => {
+    // Implemente a lógica para excluir uma tarefa da lista
+    await deleteItemById(itemId);
+    const updatedTasks = [...tasks];
+    updatedTasks.splice(index, 1);
+    setTasks(updatedTasks);
+  };
+
+  const toggleTask = (index) => {
+    // Implemente a lógica para alternar o estado de uma tarefa (concluída/não concluída)
+  };
+
+  useEffect(() => {
+    const getListItems = async () => {
+      try {
+        const listId = await fetchListIdByName(category);
+        if (!listId) {
+          console.error('Lista não encontrada');
+          return;
+        }
+
+        const items = await fetchItemsByListId(listId);
+        setTasks(items);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getListItems();
+  }, [category]);
 
   return (
     <View style={styles.container}>

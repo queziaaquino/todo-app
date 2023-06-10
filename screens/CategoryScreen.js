@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
 import { Button, Text } from 'react-native-elements';
-import axios from 'axios';
 import CustomInputDialogModal from './CustomInputDialogModal';
-
-const instance = axios.create({
-  baseURL: 'https://todo-app-wx01.onrender.com', // alterar
-});
+import { fetchListas, adicionarLista, removerLista } from '../actions/listActions';
 
 const CategoryScreen = ({ navigation }) => {
   const [listas, setListas] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const [dialogVisible, setDialogVisible] = useState(false);
 
   useEffect(() => {
-    fetchListas();
+    fetchData();
   }, []);
 
-  const fetchListas = async () => {
+  const fetchData = async () => {
     try {
-      const response = await instance.get('list');
-      setListas(response.data);
+      const listasData = await fetchListas();
+      setListas(listasData);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -41,8 +36,7 @@ const CategoryScreen = ({ navigation }) => {
     setDialogVisible(false);
     try {
       setLoading(true);
-      const response = await instance.post('list', { name: nome });
-      const novaLista = response.data;
+      const novaLista = await adicionarLista(nome);
       setListas([...listas, novaLista]);
       setLoading(false);
     } catch (error) {
@@ -54,7 +48,7 @@ const CategoryScreen = ({ navigation }) => {
   const handleRemoverLista = async (id) => {
     try {
       setLoading(true);
-      await instance.delete(`list/${id}`);
+      await removerLista(id);
       setListas(listas.filter((lista) => lista.id !== id));
       setLoading(false);
     } catch (error) {
