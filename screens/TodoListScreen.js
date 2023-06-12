@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Input, ListItem, Text, CheckBox } from 'react-native-elements';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchListIdByName, fetchItemsByListId, deleteItemById, updateItemById } from '../actions/listActions';
+import { addNewItem, fetchListIdByName, fetchItemsByListId, deleteItemById, updateItemById } from '../actions/listActions';
 
 const instance = axios.create({
   baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
@@ -45,8 +45,7 @@ export default function TodoListScreen({ route }) {
         id: uuidv4(),
         name: task,
       };
-
-      await instance.post(`list/${listId}/item`, newItem);
+      await addNewItem(listId, newItem)
       setTasks([...tasks, newItem]);
       setTask('');
     } catch (error) {
