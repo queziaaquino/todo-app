@@ -59,7 +59,6 @@ const CategoryScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Suas Listas</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (

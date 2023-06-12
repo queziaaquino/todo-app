@@ -66,3 +66,12 @@ export const deleteItemById = async (id) => {
     return null;
   }
 };
+
+export const updateItemById = async (id, isChecked) => {
+  try {
+    await instance.put(`/item/${id}`, { isChecked });
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}

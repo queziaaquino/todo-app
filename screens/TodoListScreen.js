@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Input, ListItem, Text, CheckBox } from 'react-native-elements';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchListIdByName, fetchItemsByListId, deleteItemById } from '../actions/listActions';
+import { fetchListIdByName, fetchItemsByListId, deleteItemById, updateItemById } from '../actions/listActions';
 
 const instance = axios.create({
   baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
@@ -18,12 +18,12 @@ export default function TodoListScreen({ route }) {
     return (
       <ListItem key={index} bottomDivider>
         <CheckBox
-          checked={task.completed}
-          onPress={() => toggleTask(index)}
+          checked={task.is_checked}
+          onPress={() => toggleTask(index, task.id, task.is_checked)}
         />
         <ListItem.Content>
           <ListItem.Title
-            style={task.completed ? styles.completedTask : null}
+            style={task.is_checked ? styles.completedTask : null}
           >
             {task.name}
           </ListItem.Title>
@@ -55,15 +55,24 @@ export default function TodoListScreen({ route }) {
   };
 
   const deleteTask = async (index, itemId) => {
-    // Implemente a lógica para excluir uma tarefa da lista
     await deleteItemById(itemId);
     const updatedTasks = [...tasks];
     updatedTasks.splice(index, 1);
     setTasks(updatedTasks);
   };
 
-  const toggleTask = (index) => {
-    // Implemente a lógica para alternar o estado de uma tarefa (concluída/não concluída)
+  const toggleTask = async (index, itemId, isChecked) => {
+    const check = Boolean(!isChecked);
+    await updateItemById(itemId, check);
+  
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === itemId) {
+        return { ...task, is_checked: check };
+      }
+      return task;
+    });
+  
+    setTasks(updatedTasks);
   };
 
   useEffect(() => {

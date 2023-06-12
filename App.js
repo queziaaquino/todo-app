@@ -10,7 +10,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="DailyCheck" component={CategoryScreen} />
+        <Stack.Screen name="Suas Listas" component={CategoryScreen} />
         <Stack.Screen name="Lista" component={TodoListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
