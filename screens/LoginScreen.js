@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Input, Button } from '@rneui/base';
 import axios from 'axios';
-import { fetchUser } from '../actions/listActions'
+import { fetchUser } from '../actions/listActions';
 
 const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const instance = axios.create({
-    baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
+    baseURL: 'https://todo-app-wx01.onrender.com', // Altere para a URL correta da API
   });
 
   const handleLogin = async () => {
     try {
-      const response = await fetchUser( username, password );
+      const response = await fetchUser(username, password);
 
       if (response.name) {
         navigation.navigate('Suas Listas');
@@ -28,20 +30,26 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      <Input
         style={styles.input}
         placeholder="Nome de usuário"
         value={username}
         onChangeText={text => setUsername(text)}
       />
-      <TextInput
+      <Input
         style={styles.input}
         placeholder="Senha"
         secureTextEntry
         value={password}
         onChangeText={text => setPassword(text)}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Button
+        style={styles.button}
+        onPress={handleLogin}
+      >
+        Login
+      </Button>
+      {error !== '' && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 };
@@ -52,14 +60,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#F0F8FF', // Cor de fundo da tela em um tom de azul claro
   },
   input: {
     width: '100%',
-    height: 40,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,
+  },
+  button: {
+    width: '100%',
+    maxWidth: 300, // Defina o valor máximo desejado para a largura do botão
+    alignSelf: 'center',
+    marginTop: 10,
+    backgroundColor: '#4682B4', // Cor de fundo do botão em um tom de azul
+  },
+  error: {
+    color: 'red',
+    marginTop: 10,
   },
 });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Button, Text } from 'react-native-elements';
+import { Button, Text } from '@rneui/base';
 import CustomInputDialogModal from './CustomInputDialogModal';
 import { fetchListas, adicionarLista, removerLista } from '../actions/listActions';
 

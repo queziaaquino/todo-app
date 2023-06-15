@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Input, ListItem, Text, CheckBox } from 'react-native-elements';
+import { Button, Input, ListItem, Text, CheckBox } from '@rneui/base';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { addNewItem, fetchListIdByName, fetchItemsByListId, deleteItemById, updateItemById } from '../actions/listActions';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
+  baseURL: 'https://todo-app-wx01.onrender.com', // Altere para a URL correta da API
 });
 
 export default function TodoListScreen({ route }) {

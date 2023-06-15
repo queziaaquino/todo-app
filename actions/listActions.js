@@ -2,7 +2,7 @@ import axios from 'axios';
 import uuid from 'react-native-uuid';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.0.5:3000', // Altere para a URL correta da API
+  baseURL: 'https://todo-app-wx01.onrender.com', // Altere para a URL correta da API
 });
 
 let userId = '';
