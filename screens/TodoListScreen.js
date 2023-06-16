@@ -28,7 +28,7 @@ export default function TodoListScreen({ route }) {
             {task.name}
           </ListItem.Title>
         </ListItem.Content>
-        <Button title="Excluir" onPress={() => deleteTask(index, task.id)} />
+        <Button title="Excluir" onPress={() => deleteTask(index, task.id)} color="#008080" />
       </ListItem>
     );
   };
@@ -63,14 +63,14 @@ export default function TodoListScreen({ route }) {
   const toggleTask = async (index, itemId, isChecked) => {
     const check = Boolean(!isChecked);
     await updateItemById(itemId, check);
-  
+
     const updatedTasks = tasks.map((task) => {
       if (task.id === itemId) {
         return { ...task, is_checked: check };
       }
       return task;
     });
-  
+
     setTasks(updatedTasks);
   };
 
@@ -108,6 +108,7 @@ export default function TodoListScreen({ route }) {
         title="Adicionar"
         onPress={addTaskAndSave}
         containerStyle={styles.button}
+        color="#008080"
       />
       <View style={styles.listContainer}>
         {tasks.map((task, index) => renderTask(task, index))}
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 20,
+    color:"#008080",
   },
   listContainer: {
     flex: 1,

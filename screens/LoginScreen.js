@@ -46,6 +46,7 @@ const LoginScreen = ({ navigation }) => {
       <Button
         style={styles.button}
         onPress={handleLogin}
+        color="#008080"
       >
         Login
       </Button>
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#F0F8FF', // Cor de fundo da tela em um tom de azul claro
+    backgroundColor: '##00b3b3',
   },
   input: {
     width: '100%',
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     maxWidth: 300, // Defina o valor máximo desejado para a largura do botão
     alignSelf: 'center',
     marginTop: 10,
-    backgroundColor: '#4682B4', // Cor de fundo do botão em um tom de azul
+    backgroundColor: '#00b3b3',
   },
   error: {
     color: 'red',

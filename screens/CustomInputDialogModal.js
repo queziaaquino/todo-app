@@ -20,8 +20,8 @@ const CustomInputDialogModal = ({ visible, onClose, onSubmit }) => {
           <Text style={styles.text}>Digite o nome da nova lista</Text>
           <TextInput onChangeText={handleInputChange} value={nome} style={styles.textInput}/>
           <View style={styles.viewButtons}>
-            <Button title="Cancelar" onPress={onClose} style={styles.buttons}/>
-            <Button title="Criar" onPress={handleSubmit} style={styles.buttons}/>
+            <Button title="Cancelar" onPress={onClose} style={styles.buttons} color="#008080"/>
+            <Button title="Criar" onPress={handleSubmit} style={styles.buttons} color="#008080"/>
           </View>
         </View>
       </View>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderColor: 'black',
-    borderWidth: 1, 
+    borderWidth: 1,
     borderRadius: 2,
     width: '100%'
   },
@@ -63,9 +63,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     gap: 32
-  }, 
+  },
   buttons: {
-    borderRadius: 10
+    borderRadius: 10,
+    color:"#008080",
   }
 });
 
